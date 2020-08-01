@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [],
+  "files": [
+    "src/index.ts",
+    "src/command.ts"
+  ],
+  "compilerOptions": {
+    "outDir": "build/es6",
+    "module": "es6"
+  }
+}

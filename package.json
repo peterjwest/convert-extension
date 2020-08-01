@@ -1,0 +1,75 @@
+{
+  "name": "convert-extension",
+  "version": "0.1.0",
+  "description": "Convert JS source file extensions and imports",
+  "main": "./build/wrapper.js",
+  "exports": {
+    "import": "./build/es6/index.mjs",
+    "require": "./build/wrapper.js"
+  },
+  "bin": {
+    "convert-extension": "./build/es5/command.cjs"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:peterjwest/convert-extension.git"
+  },
+  "files": [
+    "/build"
+  ],
+  "author": "Peter West",
+  "bugs": {
+    "url": "https://github.com/peterjwest/convert-extension/issues"
+  },
+  "keywords": [
+    "es6",
+    "mjs",
+    "cjs",
+    "rename",
+    "transpile",
+    "extension",
+    "typescript"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/peterjwest/convert-extension#readme",
+  "scripts": {
+    "audit-dependencies": "yarn audit; [[ $? -ge 4 ]] && exit 1 || exit 0",
+    "build": "yarn build:es6 && yarn build:es5",
+    "build:es6": "rm -rf build/es6 && tsc --project tsconfig-build-es6.json && npm run convert-extension mjs build/es6",
+    "build:es5": "rm -rf build/es5 && tsc --project tsconfig-build-es5.json && npm run convert-extension cjs build/es5",
+    "lint:ts": "tslint --format verbose --project tsconfig.json",
+    "test:coverage": "rm -rf coverage && NODE_DEBUG=nyc nyc mocha 'tests/*.ts'",
+    "test:unit": "mocha --require ts-node/register 'tests/*.ts'",
+    "test:unit:es5": "mocha 'tests/*.cjs'",
+    "test:unit:es6": "mocha 'tests/*.mjs'",
+    "convert-extension": "ts-node src/command.ts"
+  },
+  "dependencies": {
+    "@babel/core": "^7.11.0",
+    "@babel/traverse": "^7.11.0",
+    "glob": "^7.1.6",
+    "mkdirp": "^1.0.4",
+    "multiline-ts": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/types": "^7.11.0",
+    "@types/babel__core": "^7.1.9",
+    "@types/glob": "^7.1.2",
+    "@types/mkdirp": "^1.0.1",
+    "@types/mocha": "^8.0.1",
+    "@types/node": "^14.0.27",
+    "@types/sinon": "^9.0.4",
+    "mocha": "^8.1.0",
+    "nyc": "^15.1.0",
+    "sinon-assert-stub": "^1.0.1",
+    "sinon-mocha-test": "^1.0.8",
+    "ts-node": "^8.4.1",
+    "tslint": "^6.1.3",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.9.7",
+    "typescript-tslint-plugin": "^0.5.4"
+  }
+}

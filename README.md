@@ -31,5 +31,5 @@ This will convert any `.js` files and their relative imports to `.mjs`. It will 
 [circle-badge]: https://circleci.com/gh/peterjwest/convert-extension.svg?style=shield
 [circle-url]: https://circleci.com/gh/peterjwest/convert-extension
 
-[coverage-badge]: https://coveralls.io/repos/peterjwest/convert-extension/badge.svg?branch=master&service=github
-[coverage-url]: https://coveralls.io/github/peterjwest/convert-extension?branch=master
+[coverage-badge]: https://coveralls.io/repos/peterjwest/convert-extension/badge.svg?branch=main&service=github
+[coverage-url]: https://coveralls.io/github/peterjwest/convert-extension?branch=main

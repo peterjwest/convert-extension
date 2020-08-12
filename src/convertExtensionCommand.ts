@@ -13,7 +13,8 @@ export const commandHelp = multiline`
 
   Usage: npx convert-extension [--help] <extension> <path> [--input-extension=<value>]
   Description:
-    TODO
+    Converts any files in <path> with the specified input extension (default "js") and their relative imports to <extension>.
+    Will also convert source maps, if they exist.
 
   Arguments:
     <extension>

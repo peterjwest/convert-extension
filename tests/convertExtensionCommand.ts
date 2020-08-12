@@ -35,6 +35,16 @@ describe('convertExtensionCommand', () => {
     assertStub.notCalled(convertExtension);
   }));
 
+  it('Throws if input-extension option is not supplied a value', sinonTest(async (sinon) => {
+    const convertExtension = sinon.stub(dependencies, 'convertExtension').resolves();
+    const consoleLog = sinon.stub(dependencies.console, 'log');
+
+    await assert.rejects(convertExtensionCommand(['node', 'file.js', 'mjs', '--input-extension', 'src/']), new Error('--input-extension must have a value'));
+
+    assertStub.notCalled(consoleLog);
+    assertStub.notCalled(convertExtension);
+  }));
+
   it('Runs convertExtension if arguments supplied', sinonTest(async (sinon) => {
     const convertExtension = sinon.stub(dependencies, 'convertExtension').resolves();
     const consoleLog = sinon.stub(dependencies.console, 'log');
@@ -42,6 +52,16 @@ describe('convertExtensionCommand', () => {
     await convertExtensionCommand(['node', 'file.js', 'mjs', 'src/']);
 
     assertStub.notCalled(consoleLog);
-    assertStub.calledOnceWith(convertExtension, ['src/', 'mjs']);
+    assertStub.calledOnceWith(convertExtension, ['src/', 'js', 'mjs']);
+  }));
+
+  it('Runs convertExtension with a custom input extension', sinonTest(async (sinon) => {
+    const convertExtension = sinon.stub(dependencies, 'convertExtension').resolves();
+    const consoleLog = sinon.stub(dependencies.console, 'log');
+
+    await convertExtensionCommand(['node', 'file.js', 'mjs', '--input-extension=xyz', 'src/']);
+
+    assertStub.notCalled(consoleLog);
+    assertStub.calledOnceWith(convertExtension, ['src/', 'xyz', 'mjs']);
   }));
 });

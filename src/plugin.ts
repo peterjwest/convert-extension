@@ -1,13 +1,21 @@
 import { CallExpression, ImportDeclaration } from '@babel/types';
 import babelGlobal, { NodePath } from '@babel/core';
+import escapeRegex from 'escape-string-regexp';
 
-export default (babel: typeof babelGlobal) => ({
+/** Options for the plugin */
+export interface PluginOptions {
+  outputExtension: string;
+  inputExtension: string;
+}
+
+export default (babel: typeof babelGlobal, options: PluginOptions) => ({
   visitor: {
     ImportDeclaration: (nodePath: NodePath<ImportDeclaration>) => {
       const node = nodePath.node;
       const arg = node.source;
 
-      if (!arg.value.match(/^\./) || arg.value.match(/\.mjs$/)) {
+      // Ignore absolute imports and already converted extensions
+      if (!arg.value.match(/^\./) || arg.value.match(new RegExp(`\.${escapeRegex(options.outputExtension)}$`))) {
         return;
       }
 
@@ -15,7 +23,10 @@ export default (babel: typeof babelGlobal) => ({
         babel.types.importDeclaration(
           node.specifiers,
           babel.types.stringLiteral(
-            arg.value.replace(/.js$|$/, '.mjs'),
+            arg.value.replace(
+              new RegExp(`\.${escapeRegex(options.inputExtension)}$|$`),
+              `.${options.outputExtension}`,
+            ),
           ),
         ),
       );
@@ -35,14 +46,18 @@ export default (babel: typeof babelGlobal) => ({
         return;
       }
 
-      if (!arg.value.match(/^\./) || arg.value.match(/\.cjs$/)) {
+      // Ignore absolute imports and already converted extensions
+      if (!arg.value.match(/^\./) || arg.value.match(new RegExp(`\.${escapeRegex(options.outputExtension)}$`))) {
         return;
       }
 
       nodePath.replaceWith(
         babel.types.callExpression(
           callee,
-          [babel.types.stringLiteral(arg.value.replace(/.js$|$/, '.cjs'))],
+          [babel.types.stringLiteral(
+            arg.value.replace(new RegExp(`\.${escapeRegex(options.inputExtension)}$|$`),
+            `.${options.outputExtension}`,
+          ))],
         ),
       );
     },

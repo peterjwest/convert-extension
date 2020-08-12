@@ -48,13 +48,15 @@ export async function ignoreMissingFile(promise: Promise<void>) {
 }
 
 /** Converts a file with its imports and source map to a new extension */
-export async function convertFileExtension(inputFilename: string, extension: string, options: babel.TransformOptions) {
-  const outputFilename = inputFilename.replace(/\..+$/, `.${extension}`);
+export async function convertFileExtension(
+  inputFilename: string, inputExtension: string, outputExtension: string, options: babel.TransformOptions,
+) {
+  const outputFilename = inputFilename.replace(/\..+$/, `.${outputExtension}`);
   const result = await dependencies.transformFile(
     inputFilename, {
       ...options,
       caller: { name: '@babel/cli' },
-      plugins: [plugin],
+      plugins: [[plugin, { outputExtension, inputExtension }]],
       sourceMaps: true,
     },
   );
@@ -83,11 +85,12 @@ export async function convertFileExtension(inputFilename: string, extension: str
 /** Converts a directory of files to a new extension */
 export default async function convertExtension(
   directory: string,
-  extension: string,
+  inputExtension: string,
+  outputExtension: string,
   options: babel.TransformOptions = {},
 ) {
-  const filenames = await dependencies.glob(path.join(directory, '**/*.js'));
+  const filenames = await dependencies.glob(path.join(directory, `**/*.${inputExtension}`));
   for (const filename of filenames) {
-    await components.convertFileExtension(filename, extension, options);
+    await components.convertFileExtension(filename, inputExtension, outputExtension, options);
   }
 }

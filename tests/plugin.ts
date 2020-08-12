@@ -14,7 +14,7 @@ import plugin from '../src/plugin';
 describe('plugin', () => {
   describe('ImportDeclaration', () => {
     it('Adds the extension to a relative import declaration', sinonTest(async (sinon) => {
-      const { visitor } = plugin(babelGlobal);
+      const { visitor } = plugin(babelGlobal, { outputExtension: 'mjs', inputExtension: 'js' });
       const programNode = program([]);
       const nodePath = new NodePath<ImportDeclaration>(new Hub('file.js', {}), programNode);
       nodePath.node = importDeclaration([], stringLiteral('./imported'));
@@ -24,17 +24,17 @@ describe('plugin', () => {
     }));
 
     it('Changes the extension of a relative import declaration', sinonTest(async (sinon) => {
-      const { visitor } = plugin(babelGlobal);
+      const { visitor } = plugin(babelGlobal, { outputExtension: 'banana.js', inputExtension: 'js' });
       const programNode = program([]);
       const nodePath = new NodePath<ImportDeclaration>(new Hub('file.js', {}), programNode);
       nodePath.node = importDeclaration([], stringLiteral('./imported.js'));
       nodePath.container = programNode;
       visitor.ImportDeclaration(nodePath);
-      assert.strictEqual(nodePath.node.source.value, './imported.mjs');
+      assert.strictEqual(nodePath.node.source.value, './imported.banana.js');
     }));
 
     it('Does not change the extension of an absolute import', sinonTest(async (sinon) => {
-      const { visitor } = plugin(babelGlobal);
+      const { visitor } = plugin(babelGlobal, { outputExtension: 'cjs', inputExtension: 'js' });
       const programNode = program([]);
       const nodePath = new NodePath<ImportDeclaration>(new Hub('file.js', {}), programNode);
       nodePath.node = importDeclaration([], stringLiteral('example-package'));
@@ -46,7 +46,7 @@ describe('plugin', () => {
 
   describe('CallExpression', () => {
     it('Adds the extension to a relative require statement', sinonTest(async (sinon) => {
-      const { visitor } = plugin(babelGlobal);
+      const { visitor } = plugin(babelGlobal, { outputExtension: 'cjs', inputExtension: 'js' });
       const programNode = program([]);
       const nodePath = new NodePath<CallExpression>(new Hub('file.js', {}), programNode);
       nodePath.node = callExpression(identifier('require'), [stringLiteral('./imported')]);
@@ -58,7 +58,7 @@ describe('plugin', () => {
     }));
 
     it('Changes the extension of a relative require statement', sinonTest(async (sinon) => {
-      const { visitor } = plugin(babelGlobal);
+      const { visitor } = plugin(babelGlobal, { outputExtension: 'cjs', inputExtension: 'js' });
       const programNode = program([]);
       const nodePath = new NodePath<CallExpression>(new Hub('file.js', {}), programNode);
       nodePath.node = callExpression(identifier('require'), [stringLiteral('./imported.js')]);
@@ -70,7 +70,7 @@ describe('plugin', () => {
     }));
 
     it('Does not change the extension of an absolute require statement', sinonTest(async (sinon) => {
-      const { visitor } = plugin(babelGlobal);
+      const { visitor } = plugin(babelGlobal, { outputExtension: 'mjs', inputExtension: 'js' });
       const programNode = program([]);
       const nodePath = new NodePath<CallExpression>(new Hub('file.js', {}), programNode);
       nodePath.node = callExpression(identifier('require'), [stringLiteral('example-package')]);
@@ -82,7 +82,7 @@ describe('plugin', () => {
     }));
 
     it('Does not change the extension if the require is not a string literal', sinonTest(async (sinon) => {
-      const { visitor } = plugin(babelGlobal);
+      const { visitor } = plugin(babelGlobal, { outputExtension: 'mjs', inputExtension: 'js' });
       const programNode = program([]);
       const nodePath = new NodePath<CallExpression>(new Hub('file.js', {}), programNode);
       nodePath.node = callExpression(identifier('require'), [callExpression(identifier('getPackageName'), [])]);

@@ -52,7 +52,10 @@ describe('convertExtension', () => {
       const stat = sinon.stub(dependencies, 'stat').resolves();
       const unlink = sinon.stub(dependencies, 'unlink').resolves();
 
-      await assert.rejects(convertFileExtension('test.js', 'mjs', {}), new Error('Could not compile file test.js'));
+      await assert.rejects(
+        convertFileExtension('test.js', 'js', 'mjs', {}),
+        new Error('Could not compile file test.js'),
+      );
       assertStub.notCalled(saveFile);
       assertStub.notCalled(chmod);
       assertStub.notCalled(stat);
@@ -71,7 +74,7 @@ describe('convertExtension', () => {
       unlink.onCall(0).resolves();
       unlink.onCall(1).rejects(notFoundError);
 
-      await convertFileExtension('test.js', 'mjs', {});
+      await convertFileExtension('test.js', 'js', 'mjs', {});
 
       assertStub.calledOnceWith(saveFile, ['test.mjs', 'console.log("Hello world");']);
       assertStub.calledOnceWith(stat, ['test.js']);
@@ -97,7 +100,7 @@ describe('convertExtension', () => {
       const stat = sinon.stub(dependencies, 'stat').resolves(stats);
       const unlink = sinon.stub(dependencies, 'unlink').resolves();
 
-      await convertFileExtension('test.js', 'mjs', {});
+      await convertFileExtension('test.js', 'js', 'mjs', {});
 
       assertStub.calledWith(saveFile, [
         ['test.mjs.map', '{"version":1,"sources":[],"names":[],"mappings":"mappings","file":"test.mjs"}'],
@@ -114,12 +117,12 @@ describe('convertExtension', () => {
       const glob = sinon.stub(dependencies, 'glob').resolves(['test1.js', 'test2.js']);
       const convertFileExtension = sinon.stub(components, 'convertFileExtension').resolves();
 
-      await convertExtension('example/dir/', 'mjs', { cwd: 'babel/dir/' });
+      await convertExtension('example/dir/', 'js',  'mjs', { cwd: 'babel/dir/' });
 
       assertStub.calledOnceWith(glob, ['example/dir/**/*.js']);
       assertStub.calledWith(convertFileExtension, [
-        ['test1.js', 'mjs', { cwd: 'babel/dir/' }],
-        ['test2.js', 'mjs', { cwd: 'babel/dir/' }],
+        ['test1.js', 'js', 'mjs', { cwd: 'babel/dir/' }],
+        ['test2.js', 'js', 'mjs', { cwd: 'babel/dir/' }],
       ]);
     }));
 
@@ -127,12 +130,12 @@ describe('convertExtension', () => {
       const glob = sinon.stub(dependencies, 'glob').resolves(['test1.js', 'test2.js']);
       const convertFileExtension = sinon.stub(components, 'convertFileExtension').resolves();
 
-      await convertExtension('example/dir/', 'mjs');
+      await convertExtension('example/dir/', 'js', 'mjs');
 
       assertStub.calledOnceWith(glob, ['example/dir/**/*.js']);
       assertStub.calledWith(convertFileExtension, [
-        ['test1.js', 'mjs', {}],
-        ['test2.js', 'mjs', {}],
+        ['test1.js', 'js', 'mjs', {}],
+        ['test2.js', 'js', 'mjs', {}],
       ]);
     }));
   });

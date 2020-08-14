@@ -1,6 +1,6 @@
 {
   "name": "convert-extension",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Convert JS source file extensions and imports",
   "main": "./build/wrapper.js",
   "exports": {

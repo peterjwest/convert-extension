@@ -1,3 +1,3 @@
-import convertExtensionDefault, * as convertExtension from './es5/index';
-declare const convertExtensionWrapper: typeof convertExtensionDefault & convertExtension;
-export = convertExtensionWrapper;
+import defaultImport, * as namedImports from './es5/index';
+declare const wrapper: typeof defaultImport & typeof namedImports;
+export = wrapper;

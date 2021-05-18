@@ -16,7 +16,7 @@ describe('plugin', () => {
     it('Adds the extension to a relative import declaration', sinonTest(async (sinon) => {
       const { visitor } = plugin(babelGlobal, { outputExtension: 'mjs', inputExtension: 'js' });
       const programNode = program([]);
-      const nodePath = new NodePath<ImportDeclaration>(new Hub('file.js', {}), programNode);
+      const nodePath = new NodePath<ImportDeclaration>(new Hub(), programNode);
       nodePath.node = importDeclaration([], stringLiteral('./imported'));
       nodePath.container = programNode;
       visitor.ImportDeclaration(nodePath);
@@ -26,7 +26,7 @@ describe('plugin', () => {
     it('Changes the extension of a relative import declaration', sinonTest(async (sinon) => {
       const { visitor } = plugin(babelGlobal, { outputExtension: 'banana.js', inputExtension: 'js' });
       const programNode = program([]);
-      const nodePath = new NodePath<ImportDeclaration>(new Hub('file.js', {}), programNode);
+      const nodePath = new NodePath<ImportDeclaration>(new Hub(), programNode);
       nodePath.node = importDeclaration([], stringLiteral('./imported.js'));
       nodePath.container = programNode;
       visitor.ImportDeclaration(nodePath);
@@ -36,7 +36,7 @@ describe('plugin', () => {
     it('Does not change the extension of an absolute import', sinonTest(async (sinon) => {
       const { visitor } = plugin(babelGlobal, { outputExtension: 'cjs', inputExtension: 'js' });
       const programNode = program([]);
-      const nodePath = new NodePath<ImportDeclaration>(new Hub('file.js', {}), programNode);
+      const nodePath = new NodePath<ImportDeclaration>(new Hub(), programNode);
       nodePath.node = importDeclaration([], stringLiteral('example-package'));
       nodePath.container = programNode;
       visitor.ImportDeclaration(nodePath);
@@ -48,7 +48,7 @@ describe('plugin', () => {
     it('Adds the extension to a relative require statement', sinonTest(async (sinon) => {
       const { visitor } = plugin(babelGlobal, { outputExtension: 'cjs', inputExtension: 'js' });
       const programNode = program([]);
-      const nodePath = new NodePath<CallExpression>(new Hub('file.js', {}), programNode);
+      const nodePath = new NodePath<CallExpression>(new Hub(), programNode);
       nodePath.node = callExpression(identifier('require'), [stringLiteral('./imported')]);
       nodePath.container = programNode;
       visitor.CallExpression(nodePath);
@@ -60,7 +60,7 @@ describe('plugin', () => {
     it('Changes the extension of a relative require statement', sinonTest(async (sinon) => {
       const { visitor } = plugin(babelGlobal, { outputExtension: 'cjs', inputExtension: 'js' });
       const programNode = program([]);
-      const nodePath = new NodePath<CallExpression>(new Hub('file.js', {}), programNode);
+      const nodePath = new NodePath<CallExpression>(new Hub(), programNode);
       nodePath.node = callExpression(identifier('require'), [stringLiteral('./imported.js')]);
       nodePath.container = programNode;
       visitor.CallExpression(nodePath);
@@ -72,7 +72,7 @@ describe('plugin', () => {
     it('Does not change the extension of an absolute require statement', sinonTest(async (sinon) => {
       const { visitor } = plugin(babelGlobal, { outputExtension: 'mjs', inputExtension: 'js' });
       const programNode = program([]);
-      const nodePath = new NodePath<CallExpression>(new Hub('file.js', {}), programNode);
+      const nodePath = new NodePath<CallExpression>(new Hub(), programNode);
       nodePath.node = callExpression(identifier('require'), [stringLiteral('example-package')]);
       nodePath.container = programNode;
       visitor.CallExpression(nodePath);
@@ -84,7 +84,7 @@ describe('plugin', () => {
     it('Does not change the extension if the require is not a string literal', sinonTest(async (sinon) => {
       const { visitor } = plugin(babelGlobal, { outputExtension: 'mjs', inputExtension: 'js' });
       const programNode = program([]);
-      const nodePath = new NodePath<CallExpression>(new Hub('file.js', {}), programNode);
+      const nodePath = new NodePath<CallExpression>(new Hub(), programNode);
       nodePath.node = callExpression(identifier('require'), [callExpression(identifier('getPackageName'), [])]);
       nodePath.container = programNode;
       visitor.CallExpression(nodePath);

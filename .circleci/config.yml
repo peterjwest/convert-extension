@@ -195,7 +195,7 @@ workflows:
       - test-node-12
       - test-node-14
 
-  nightly:
+  weekly:
     jobs:
       - checks-latest
       - test-node-10-latest
@@ -203,9 +203,10 @@ workflows:
       - test-node-14-latest
     triggers:
       - schedule:
-          # Nightly at midnight
-          cron: "0 0 * * *"
+          # Midnight on Sunday
+          cron: "0 0 * * 0"
           filters:
             branches:
               only:
                 - main
+

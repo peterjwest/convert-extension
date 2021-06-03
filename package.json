@@ -50,7 +50,6 @@
   "dependencies": {
     "@babel/core": "^7.11.0",
     "@babel/traverse": "^7.11.0",
-    "escape-regex-string": "^1.0.6",
     "escape-string-regexp": "^4.0.0",
     "glob": "^7.1.6",
     "mkdirp": "^1.0.4",

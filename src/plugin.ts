@@ -1,11 +1,17 @@
 import { CallExpression, ImportDeclaration } from '@babel/types';
 import babelGlobal, { NodePath } from '@babel/core';
-import escapeRegex from 'escape-string-regexp';
 
 /** Options for the plugin */
 export interface PluginOptions {
   outputExtension: string;
   inputExtension: string;
+}
+
+/** Escape regex special characters in a string */
+function escapeRegex(value: string) {
+  return value
+    .replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
+    .replace(/-/g, '\\x2d');
 }
 
 export default (babel: typeof babelGlobal, options: PluginOptions) => ({

@@ -51,7 +51,7 @@ export async function ignoreMissingFile(promise: Promise<void>) {
 export async function convertFileExtension(
   inputFilename: string, inputExtension: string, outputExtension: string, options: babel.TransformOptions,
 ) {
-  const outputFilename = inputFilename.replace(/\..+$/, `.${outputExtension}`);
+  const outputFilename = inputFilename.replace(/\.[^.]+$/, `.${outputExtension}`);
   const result = await dependencies.transformFile(
     inputFilename, {
       ...options,

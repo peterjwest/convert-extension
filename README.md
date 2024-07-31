@@ -1,5 +1,8 @@
 # convert-extension [![npm version][npm-badge]][npm-url] [![build status][circle-badge]][circle-url] [![coverage status][coverage-badge]][coverage-url]
 
+> [!WARNING]
+> This project has been archived, because this is no longer necessary with modern JS build tools.
+
 Convert JS source file extensions and imports.
 
 This module was created to allow you to convert the output of Typescript to `.mjs` or `.cjs`, for better support with node ES6 modules.
